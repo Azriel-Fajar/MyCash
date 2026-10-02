@@ -1,5 +1,6 @@
 import { Check } from 'lucide-react'
 import type { ReactNode } from 'react'
+import { formatDMY } from '@/lib/dates'
 import { ICONS } from '@/lib/icons'
 import { cn } from '@/lib/utils'
 import { Input } from './ui/input'
@@ -21,6 +22,39 @@ export const selectCls = 'h-11 w-full rounded-xl bg-card px-3 text-sm outline-no
 
 export function TextInput(props: React.ComponentProps<typeof Input>) {
   return <Input {...props} className={cn(inputCls, props.className)} />
+}
+
+/**
+ * Native date picker that always shows DD/MM/YYYY. The real input sits invisibly on top so tapping
+ * still opens the phone's picker; its own text follows the browser locale (often MM/DD/YYYY).
+ */
+export function DateInput({
+  value,
+  onChange,
+  className,
+  ...props
+}: { value: string; onChange: (v: string) => void } & Omit<React.ComponentProps<'input'>, 'value' | 'onChange' | 'type'>) {
+  return (
+    <div className={cn('relative flex h-11 items-center rounded-xl bg-card px-3 text-sm focus-within:ring-2 focus-within:ring-ring', className)}>
+      <span aria-hidden className={cn('num', !value && 'text-muted-foreground')}>
+        {value ? formatDMY(value) : 'dd/mm/yyyy'}
+      </span>
+      <input
+        {...props}
+        type="date"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        onClick={(e) => {
+          try {
+            e.currentTarget.showPicker()
+          } catch {
+            /* unsupported or already open */
+          }
+        }}
+        className="absolute inset-0 size-full cursor-pointer opacity-0"
+      />
+    </div>
+  )
 }
 
 export const SWATCHES = [

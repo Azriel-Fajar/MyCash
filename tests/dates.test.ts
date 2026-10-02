@@ -4,6 +4,7 @@ import {
   addMonths,
   daysInMonth,
   effectiveDay,
+  formatDMY,
   monthKey,
   monthRange,
   todayWIB,
@@ -48,5 +49,11 @@ describe('addDays', () => {
   test('crosses month and year boundaries', () => {
     expect(addDays('2026-10-01', -1)).toBe('2026-09-30')
     expect(addDays('2026-12-31', 1)).toBe('2027-01-01')
+  })
+})
+
+describe('formatDMY', () => {
+  test('puts day first and month in the middle', () => {
+    expect(formatDMY('2026-10-02')).toBe('02/10/2026')
   })
 })

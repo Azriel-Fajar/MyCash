@@ -1,10 +1,10 @@
 import { ArrowLeftRight, ChevronDown, Minus, Moon, Plus, Sun } from 'lucide-react'
 import { useState } from 'react'
-import { Link } from 'react-router'
 import { CategoryShare } from '@/components/CategoryShare'
 import { MonthSwitcher } from '@/components/MonthSwitcher'
 import { Segmented } from '@/components/Segmented'
 import { WalletCard } from '@/components/WalletCard'
+import { WalletSheet } from '@/components/WalletSheet'
 import { useData } from '@/hooks/data'
 import { useMonthTx } from '@/hooks/useTx'
 import { useUi } from '@/hooks/ui'
@@ -12,7 +12,7 @@ import { useI18n } from '@/i18n'
 import { formatIDR } from '@/lib/money'
 import { groupByCategory, monthSummary } from '@/lib/stats'
 import { useTheme } from '@/lib/theme'
-import type { CategoryType } from '@/lib/types'
+import type { CategoryType, Wallet, WithId } from '@/lib/types'
 import { cn } from '@/lib/utils'
 
 export default function Home() {
@@ -23,6 +23,7 @@ export default function Home() {
   const { resolved, setPref } = useTheme()
   const [view, setView] = useState<CategoryType>('expense')
   const [expanded, setExpanded] = useState<string | null>(null)
+  const [walletSheet, setWalletSheet] = useState({ open: false, nonce: 0, wallet: null as WithId<Wallet> | null })
 
   const total = activeWallets.reduce((s, w) => s + w.balance, 0)
   const sum = monthSummary(txs)
@@ -48,13 +49,14 @@ export default function Home() {
 
       <div className="-mt-24 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-smooth px-5 pb-4 [scrollbar-width:none]">
         {activeWallets.map((w) => (
-          <Link
+          <button
             key={w.id}
-            to={`/history?wallet=${w.id}`}
-            className="w-[min(18rem,78vw)] shrink-0 snap-center rounded-[1.5rem] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
+            type="button"
+            onClick={() => setWalletSheet((s) => ({ open: true, nonce: s.nonce + 1, wallet: w }))}
+            className="w-[min(18rem,78vw)] shrink-0 snap-center rounded-[1.5rem] text-left focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring"
           >
             <WalletCard wallet={w} isDefault={w.id === settings?.defaultWalletId} />
-          </Link>
+          </button>
         ))}
       </div>
 
@@ -136,6 +138,12 @@ export default function Home() {
           </ul>
         )}
       </div>
+      <WalletSheet
+        key={walletSheet.nonce}
+        open={walletSheet.open}
+        onOpenChange={(o) => setWalletSheet((s) => ({ ...s, open: o }))}
+        wallet={walletSheet.wallet}
+      />
     </>
   )
 }

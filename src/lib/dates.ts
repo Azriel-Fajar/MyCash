@@ -43,3 +43,9 @@ export function addDays(date: string, n: number): string {
   const [y, m, d] = date.split('-').map(Number)
   return new Date(Date.UTC(y, m - 1, d + n)).toISOString().slice(0, 10)
 }
+
+/** 'YYYY-MM-DD' → 'DD/MM/YYYY' (day first, month in the middle). */
+export function formatDMY(date: string): string {
+  const [y, m, d] = date.split('-')
+  return `${d}/${m}/${y}`
+}

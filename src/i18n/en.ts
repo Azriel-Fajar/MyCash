@@ -124,6 +124,7 @@ export const en: Record<DictKey, string> = {
   'wallets.type.ewallet': 'E-wallet',
   'wallets.type.savings': 'Savings',
   'wallets.default': 'Main',
+  'wallets.viewTx': 'View transactions',
 
   'categories.new': 'New category',
   'categories.parent': 'Parent',

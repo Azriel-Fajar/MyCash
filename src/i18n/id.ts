@@ -122,6 +122,7 @@ export const id = {
   'wallets.type.ewallet': 'E-wallet',
   'wallets.type.savings': 'Tabungan',
   'wallets.default': 'Utama',
+  'wallets.viewTx': 'Lihat transaksi',
 
   'categories.new': 'Kategori baru',
   'categories.parent': 'Induk',

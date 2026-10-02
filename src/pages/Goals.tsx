@@ -3,7 +3,7 @@ import { Check, Plus, Trash2 } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import { AmountField } from '@/components/AmountField'
-import { Field, selectCls, TextInput } from '@/components/FormBits'
+import { DateInput, Field, selectCls, TextInput } from '@/components/FormBits'
 import { PageHeader } from '@/components/PageHeader'
 import { Sheet } from '@/components/Sheet'
 import { Button } from '@/components/ui/button'
@@ -156,7 +156,7 @@ function GoalSheet({ open, onOpenChange, goal }: { open: boolean; onOpenChange: 
       </Field>
       <AmountField id="g-target" label={t('goals.target')} value={target} onChange={setTarget} />
       <Field label={t('goals.deadline')} htmlFor="g-deadline">
-        <TextInput id="g-deadline" type="date" value={deadline} min={todayWIB()} onChange={(e) => setDeadline(e.target.value)} className="num" />
+        <DateInput id="g-deadline" value={deadline} min={todayWIB()} onChange={setDeadline} />
       </Field>
       <Field label={t('goals.wallet')} htmlFor="g-wallet" hint={t('goals.walletHint')}>
         <select id="g-wallet" value={walletId} onChange={(e) => setWalletId(e.target.value)} className={selectCls}>

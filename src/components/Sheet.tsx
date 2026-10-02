@@ -7,6 +7,7 @@ import {
   DrawerHeader,
   DrawerTitle,
 } from '@/components/ui/drawer'
+import { useBackClose } from '@/hooks/useBackClose'
 
 interface Props {
   open: boolean
@@ -19,6 +20,7 @@ interface Props {
 
 /** Bottom drawer with a scrollable body and a pinned footer — used for every form. */
 export function Sheet({ open, onOpenChange, title, description, children, footer }: Props) {
+  useBackClose(open, () => onOpenChange(false))
   return (
     <Drawer open={open} onOpenChange={onOpenChange} repositionInputs={false}>
       <DrawerContent className="mx-auto max-h-[92dvh] max-w-lg rounded-t-[1.75rem] border-none bg-background">

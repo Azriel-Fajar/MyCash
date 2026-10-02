@@ -21,6 +21,7 @@ import { todayWIB } from '@/lib/dates'
 import type { Tx, TxType } from '@/lib/types'
 import { AmountField } from './AmountField'
 import { CategoryPicker } from './CategoryPicker'
+import { DateInput } from './FormBits'
 import { Segmented } from './Segmented'
 import { Sheet } from './Sheet'
 import { WalletChips } from './WalletChips'
@@ -141,14 +142,7 @@ export function TxSheet({ open, onOpenChange, request, online }: Props) {
           <label htmlFor="tx-date" className="text-sm text-muted-foreground">
             {t('tx.date')}
           </label>
-          <Input
-            id="tx-date"
-            type="date"
-            value={date}
-            max={todayWIB()}
-            onChange={(e) => e.target.value && setDate(e.target.value)}
-            className="num mt-1 h-11 rounded-xl border-none bg-card"
-          />
+          <DateInput id="tx-date" value={date} max={todayWIB()} onChange={(v) => v && setDate(v)} className="mt-1" />
         </div>
         <div>
           <label htmlFor="tx-note" className="text-sm text-muted-foreground">

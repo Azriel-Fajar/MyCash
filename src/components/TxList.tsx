@@ -50,7 +50,7 @@ export function TxList({ txs, onSelect }: { txs: WithId<Tx>[]; onSelect: (tx: Wi
 
 function TxRow({ tx, onClick }: { tx: WithId<Tx>; onClick: () => void }) {
   const { t } = useI18n()
-  const { catById, catLabel, walletById } = useData()
+  const { catById, catLabel, catColor, walletById } = useData()
   const wallet = walletById[tx.walletId]?.name ?? '—'
   const isTransfer = tx.type === 'transfer'
   const title = isTransfer ? `${wallet} → ${walletById[tx.toWalletId ?? '']?.name ?? '—'}` : catLabel(tx.categoryId)
@@ -64,7 +64,7 @@ function TxRow({ tx, onClick }: { tx: WithId<Tx>; onClick: () => void }) {
       onClick={onClick}
       className="flex w-full items-center gap-3 rounded-2xl bg-card p-3 text-left transition-colors hover:bg-card/70 focus-visible:outline-2 focus-visible:outline-ring"
     >
-      {isTransfer ? <IconBubble Icon={ArrowLeftRight} /> : <IconBubble icon={catById[tx.categoryId ?? '']?.icon} />}
+      {isTransfer ? <IconBubble Icon={ArrowLeftRight} /> : <IconBubble icon={catById[tx.categoryId ?? '']?.icon} color={catColor(tx.categoryId)} />}
       <span className="min-w-0 flex-1">
         <span className="block truncate font-medium">{title}</span>
         {meta && <span className="block truncate text-sm text-muted-foreground">{meta}</span>}

@@ -7,11 +7,11 @@ import { IconBubble } from './IconBubble'
 /** Icon, name, total, count and a share bar in the category's color. */
 export function CategoryShare({ group }: { group: CategoryGroup }) {
   const { t } = useI18n()
-  const { catById, catName } = useData()
+  const { catById, catName, catColor } = useData()
   const root = catById[group.rootId]
   return (
     <>
-      <IconBubble icon={root?.icon} />
+      <IconBubble icon={root?.icon} color={catColor(group.rootId)} />
       <span className="min-w-0 flex-1">
         <span className="flex items-baseline justify-between gap-2">
           <span className="truncate font-medium">{catName(root)}</span>

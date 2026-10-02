@@ -6,7 +6,7 @@ import { toList, useDbValue } from './useDb'
 
 interface Data {
   settings: Settings | null
-  /** All wallets incl. archived, ordered. */
+  /** All wallets incl. archived, highest balance first. */
   wallets: WithId<Wallet>[]
   activeWallets: WithId<Wallet>[]
   walletById: Record<string, WithId<Wallet>>
@@ -17,6 +17,8 @@ interface Data {
   catLabel: (id: string | null | undefined) => string
   /** Parent id for a subcategory, itself for a root. */
   rootOf: (id: string | null | undefined) => string | null
+  /** Root category's color for the icon bubble; undefined keeps the ink default (bills). */
+  catColor: (id: string | null | undefined) => string | undefined
   loading: boolean
   error: Error | null
 }
@@ -24,6 +26,7 @@ interface Data {
 const Ctx = createContext<Data | null>(null)
 
 const byOrder = <T extends { order: number }>(a: T, b: T) => a.order - b.order
+const byBalance = (a: Wallet, b: Wallet) => b.balance - a.balance || byOrder(a, b)
 
 export function DataProvider({ enabled, children }: { enabled: boolean; children: ReactNode }) {
   const { t, lang, setLang } = useI18n()
@@ -39,7 +42,7 @@ export function DataProvider({ enabled, children }: { enabled: boolean; children
   }, [remoteLang])
 
   const value = useMemo<Data>(() => {
-    const ws = toList(wallets.data).sort(byOrder)
+    const ws = toList(wallets.data).sort(byBalance)
     const cs = toList(categories.data).sort(byOrder)
     const walletById = Object.fromEntries(ws.map((w) => [w.id, w]))
     const catById = Object.fromEntries(cs.map((c) => [c.id, c]))
@@ -62,6 +65,11 @@ export function DataProvider({ enabled, children }: { enabled: boolean; children
       rootOf: (id) => {
         const c = id ? catById[id] : undefined
         return c ? (c.parentId ?? id ?? null) : null
+      },
+      catColor: (id) => {
+        const c = id ? catById[id] : undefined
+        const root = c?.parentId ? catById[c.parentId] : c
+        return root && root.key !== 'bills' ? root.color : undefined
       },
       loading: settings.loading || wallets.loading || categories.loading,
       error: settings.error || wallets.error || categories.error,

@@ -21,7 +21,7 @@ import { cn } from '@/lib/utils'
 
 export default function Recurring() {
   const { t } = useI18n()
-  const { catById, catLabel, walletById } = useData()
+  const { catById, catLabel, catColor, walletById } = useData()
   const { items, loading } = useDbList<R>('recurring')
   const [sheet, setSheet] = useState({ open: false, nonce: 0, item: null as WithId<R> | null })
   const open = (item: WithId<R> | null) => setSheet((s) => ({ open: true, nonce: s.nonce + 1, item }))
@@ -48,7 +48,7 @@ export default function Recurring() {
                 <Row
                   onClick={() => open(r)}
                   muted={!r.active}
-                  leading={<IconBubble icon={catById[r.categoryId]?.icon} />}
+                  leading={<IconBubble icon={catById[r.categoryId]?.icon} color={catColor(r.categoryId)} />}
                   title={r.note || catLabel(r.categoryId)}
                   subtitle={`${t('recurring.everyMonth', { d: r.dayOfMonth })}, ${walletById[r.walletId]?.name ?? '—'}${r.active ? '' : `, ${t('recurring.paused')}`}`}
                   trailing={

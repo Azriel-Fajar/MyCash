@@ -17,7 +17,7 @@ import type { CategoryType, Phrase, WithId } from '@/lib/types'
 
 export default function Phrases() {
   const { t } = useI18n()
-  const { catById, catLabel } = useData()
+  const { catById, catLabel, catColor } = useData()
   const { items, loading } = useDbList<Phrase>('phrases')
   const [sheet, setSheet] = useState({ open: false, nonce: 0, phrase: null as WithId<Phrase> | null })
   const open = (phrase: WithId<Phrase> | null) => setSheet((s) => ({ open: true, nonce: s.nonce + 1, phrase }))
@@ -44,7 +44,7 @@ export default function Phrases() {
               <li key={p.id}>
                 <Row
                   onClick={() => open(p)}
-                  leading={<IconBubble icon={catById[p.categoryId]?.icon} size="sm" />}
+                  leading={<IconBubble icon={catById[p.categoryId]?.icon} color={catColor(p.categoryId)} size="sm" />}
                   title={<span className="num">“{p.id}”</span>}
                   subtitle={`${t(`type.${p.type}`)}: ${catLabel(p.categoryId)}`}
                 />

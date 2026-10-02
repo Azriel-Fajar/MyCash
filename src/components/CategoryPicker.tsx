@@ -13,7 +13,7 @@ interface Props {
 /** Root categories as an icon grid; picking one with children reveals subcategory chips. */
 export function CategoryPicker({ type, value, onChange }: Props) {
   const { t } = useI18n()
-  const { categories, catName, rootOf } = useData()
+  const { categories, catName, rootOf, catColor } = useData()
   const visible = (c: { archived: boolean; id: string }) => !c.archived || c.id === value
   const roots = categories.filter((c) => !c.parentId && c.type === type && visible(c))
   const rootId = rootOf(value)
@@ -35,6 +35,7 @@ export function CategoryPicker({ type, value, onChange }: Props) {
             >
               <IconBubble
                 icon={c.icon}
+                color={active ? undefined : catColor(c.id)}
                 className={cn('size-12', active && 'bg-primary text-primary-foreground ring-4 ring-primary/25')}
               />
               <span className={cn('line-clamp-2 text-center text-xs leading-tight', active ? 'font-semibold' : 'text-muted-foreground')}>

@@ -20,7 +20,7 @@ interface Target {
 
 export default function Categories() {
   const { t } = useI18n()
-  const { categories, catName } = useData()
+  const { categories, catName, catColor } = useData()
   const [type, setType] = useState<CategoryType>('expense')
   const [showArchived, setShowArchived] = useState(false)
   const [sheet, setSheet] = useState<{ open: boolean; nonce: number } & Target>({ open: false, nonce: 0, category: null, parent: null })
@@ -56,7 +56,7 @@ export default function Categories() {
               <Row
                 onClick={() => open({ category: root, parent: null })}
                 muted={root.archived}
-                leading={<IconBubble icon={root.icon} />}
+                leading={<IconBubble icon={root.icon} color={catColor(root.id)} />}
                 title={catName(root)}
                 trailing={<span className="size-3 shrink-0 rounded-full" style={{ background: root.color }} aria-hidden />}
               />
@@ -66,7 +66,7 @@ export default function Categories() {
                     <Row
                       onClick={() => open({ category: c, parent: root })}
                       muted={c.archived || root.archived}
-                      leading={<IconBubble icon={c.icon} size="sm" />}
+                      leading={<IconBubble icon={c.icon} color={catColor(c.id)} size="sm" />}
                       title={catName(c)}
                     />
                   </li>

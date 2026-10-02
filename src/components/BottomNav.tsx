@@ -5,7 +5,7 @@ import { useI18n } from '@/i18n'
 import type { DictKey } from '@/i18n/id'
 import { cn } from '@/lib/utils'
 
-const TABS: { to: string; label: DictKey; Icon: LucideIcon; end?: boolean }[] = [
+export const TABS: { to: string; label: DictKey; Icon: LucideIcon; end?: boolean }[] = [
   { to: '/', label: 'nav.home', Icon: House, end: true },
   { to: '/history', label: 'nav.history', Icon: History },
   { to: '/stats', label: 'nav.stats', Icon: ChartPie },

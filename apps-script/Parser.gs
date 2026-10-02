@@ -9,6 +9,16 @@ var FROM_WORDS = ['dari', 'dr', 'from']
 var CONNECTOR_WORDS = ['pake', 'pakai', 'via', 'dengan', 'ke', 'dari', 'dr', 'to', 'from', 'using', 'with']
 // Also dropped when proposing a phrase to learn.
 var FILLER_WORDS = CONNECTOR_WORDS.concat(['beli', 'bayar', 'buat', 'untuk', 'utk', 'di', 'masuk', 'keluar', 'for', 'at', 'the', 'a', 'paid', 'buy'])
+// Also dropped from a transaction's note: chatter and action verbs (the verb already picked the category).
+var DESC_DROP_WORDS = [
+  'aku', 'saya', 'gue', 'gua', 'gw', 'ane', 'i',
+  'tadi', 'td', 'barusan', 'abis', 'habis', 'baru', 'udah', 'udh', 'sudah', 'lagi', 'lg',
+  'nih', 'dong', 'deh', 'sih', 'ya', 'aja', 'yg', 'yang', 'wkwk', 'wkwkwk', 'hehe',
+  'jajan', 'makan', 'minum', 'beli', 'bayar', 'belanja', 'nonton', 'isi', 'di', 'masuk', 'keluar',
+  'just', 'bought', 'buy', 'paid', 'pay', 'for', 'at', 'the', 'a',
+]
+// The note stops here: "bang bang sama temen" → "bang bang".
+var DESC_CUT_WORDS = ['sama', 'bareng']
 
 function escapeRegex_(s) {
   return s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
@@ -160,6 +170,27 @@ function leftoverWords_(text, used, drop) {
 }
 
 /**
+ * Transaction note from leftover words: chatter dropped, cut at DESC_CUT_WORDS, Title Cased
+ * (words typed with capitals stay as typed). A multi-word phrase ("makan siang") is kept whole.
+ * Nothing left → the matched phrase.
+ */
+function describe_(words, phrase) {
+  var keep = phrase && phrase.indexOf(' ') !== -1 ? phrase.split(' ') : []
+  var out = []
+  for (var i = 0; i < words.length; i++) {
+    var w = words[i].toLowerCase()
+    if (DESC_CUT_WORDS.indexOf(w) !== -1) break
+    if (DESC_DROP_WORDS.indexOf(w) === -1 || keep.indexOf(w) !== -1) out.push(words[i])
+  }
+  if (!out.length && phrase) out = phrase.split(' ')
+  return out
+    .map(function (w) {
+      return w === w.toLowerCase() ? w.charAt(0).toUpperCase() + w.slice(1) : w
+    })
+    .join(' ')
+}
+
+/**
  * ctx: { today, wallets: [{id, name}], aliases: {alias: walletName}, defaultWalletId,
  *        phrases: {phrase: {type, categoryId}} }
  */
@@ -220,7 +251,7 @@ function parseMessage(text, ctx) {
   }
 
   var matched = phrase && (!forced || forced === phrase.entry.type) ? phrase : null
-  var note = leftoverWords_(raw, used, CONNECTOR_WORDS).join(' ')
+  var note = describe_(leftoverWords_(raw, used, CONNECTOR_WORDS), matched ? matched.phrase : null)
   return Object.assign(base, {
     kind: 'tx',
     type: matched ? matched.entry.type : forced,

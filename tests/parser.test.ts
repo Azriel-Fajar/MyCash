@@ -28,7 +28,7 @@ describe('transactions', () => {
   test('expense with phrase, amount suffix and explicit wallet', () => {
     expect(parse('beli kopi 25rb pake gopay')).toMatchObject({
       ok: true, kind: 'tx', type: 'expense', amount: 25000, categoryId: 'c_coffee',
-      walletId: 'w_gopay', walletExplicit: true, date: '2026-10-02', note: 'beli kopi',
+      walletId: 'w_gopay', walletExplicit: true, date: '2026-10-02', note: 'Kopi',
     })
   })
 
@@ -86,7 +86,7 @@ describe('amounts', () => {
 
 describe('dates', () => {
   test('kemarin / yesterday', () => {
-    expect(parse('kemarin makan 30rb')).toMatchObject({ date: '2026-10-01', categoryId: 'c_meal', note: 'makan' })
+    expect(parse('kemarin makan 30rb')).toMatchObject({ date: '2026-10-01', categoryId: 'c_meal', note: 'Makan' })
     expect(parse('yesterday makan 30rb').date).toBe('2026-10-01')
   })
 
@@ -100,7 +100,7 @@ describe('dates', () => {
   })
 
   test('explicit dd/mm beats kemarin, and both leave the note', () => {
-    expect(parse('kemarin bensin 50rb 28/9')).toMatchObject({ date: '2026-09-28', note: 'bensin', amount: 50000 })
+    expect(parse('kemarin bensin 50rb 28/9')).toMatchObject({ date: '2026-09-28', note: 'Bensin', amount: 50000 })
   })
 
   test('invalid dd/mm is ignored', () => {
@@ -123,6 +123,23 @@ describe('transfers', () => {
 
   test('a matching phrase beats the transfer keyword when only one wallet is named', () => {
     expect(parse('topup game 50rb pake gopay')).toMatchObject({ kind: 'tx', categoryId: 'c_game', walletId: 'w_gopay' })
+  })
+})
+
+describe('description', () => {
+  const note = (s: string) => parse(s).note
+  test.each([
+    ['aku jajan bang bang 5k', 'Bang Bang'],
+    ['makan nasi padang 25k', 'Nasi Padang'],
+    ['beli kopi starbucks 50k', 'Kopi Starbucks'],
+    ['tadi jajan bang bang sama temen 5k', 'Bang Bang'],
+    ['makan siang 30rb', 'Makan Siang'],
+    ['gaji masuk 8jt', 'Gaji'],
+    ['beli KFC 40k', 'KFC'],
+    ['kopi 20k', 'Kopi'],
+    ['makan 20k', 'Makan'],
+  ])('%s → %s', (s, d) => {
+    expect(note(s)).toBe(d)
   })
 })
 

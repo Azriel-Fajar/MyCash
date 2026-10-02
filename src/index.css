@@ -1,0 +1,130 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "@fontsource-variable/inter";
+@import "@fontsource-variable/jetbrains-mono";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --radius: 1.25rem;
+
+  --background: #e9e8ef;
+  --foreground: #1f2630;
+  --card: #ffffff;
+  --card-foreground: #1f2630;
+  --popover: #ffffff;
+  --popover-foreground: #1f2630;
+  --primary: #e07338;
+  --primary-foreground: #1f2630;
+  --secondary: #dcdbe4;
+  --secondary-foreground: #1f2630;
+  --muted: #dcdbe4;
+  --muted-foreground: #5d6270;
+  --accent: #f9e0d2;
+  --accent-foreground: #1f2630;
+  --destructive: #c2413d;
+  --border: #d6d5de;
+  --input: #d6d5de;
+  --ring: #e07338;
+
+  /* MyCash palette */
+  --ink: #1f2630;
+  --ink-foreground: #f4f4f7;
+  --brand: #e07338;
+  --brand-soft: #f9e0d2;
+  --brand-strong: #a84c1c;
+  --lime: #ddf35a;
+  --income: #23805a;
+  --expense: #c2413d;
+
+  /* Charts (in/out pair validated for CVD separation) */
+  --chart-bar: #f2c3a6;
+  --chart-in: #2b6cb0;
+  --chart-out: #d2603a;
+}
+
+.dark {
+  --background: #14181e;
+  --foreground: #eceef2;
+  --card: #1e242c;
+  --card-foreground: #eceef2;
+  --popover: #1e242c;
+  --popover-foreground: #eceef2;
+  --primary: #e07338;
+  --primary-foreground: #1f2630;
+  --secondary: #2a313b;
+  --secondary-foreground: #eceef2;
+  --muted: #2a313b;
+  --muted-foreground: #9aa0ab;
+  --accent: #3a2a22;
+  --accent-foreground: #eceef2;
+  --destructive: #e06a66;
+  --border: #2c333d;
+  --input: #2c333d;
+  --ring: #e07338;
+
+  --ink: #0f1318;
+  --ink-foreground: #eceef2;
+  --brand-soft: #3a2a22;
+  --brand-strong: #eb8a55;
+  --income: #45b884;
+  --expense: #e06a66;
+
+  --chart-bar: #5a4034;
+  --chart-in: #3a8fd0;
+  --chart-out: #d9703f;
+}
+
+@theme inline {
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono Variable", ui-monospace, monospace;
+
+  --radius-sm: calc(var(--radius) - 8px);
+  --radius-md: calc(var(--radius) - 4px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-ink: var(--ink);
+  --color-ink-foreground: var(--ink-foreground);
+  --color-brand: var(--brand);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-strong: var(--brand-strong);
+  --color-lime: var(--lime);
+  --color-income: var(--income);
+  --color-expense: var(--expense);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    -webkit-tap-highlight-color: transparent;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    overscroll-behavior-y: none;
+  }
+  .num {
+    @apply font-mono tabular-nums;
+  }
+}

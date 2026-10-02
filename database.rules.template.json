@@ -1,0 +1,43 @@
+{
+  "rules": {
+    ".read": "auth != null && auth.uid === 'OWNER_UID'",
+    ".write": "auth != null && auth.uid === 'OWNER_UID'",
+    "transactions": {
+      ".indexOn": ["month", "date"],
+      "$id": {
+        ".validate": "newData.hasChildren(['type', 'amount', 'walletId', 'date', 'month', 'source', 'createdAt', 'updatedAt'])",
+        "type": { ".validate": "newData.val() === 'expense' || newData.val() === 'income' || newData.val() === 'transfer'" },
+        "amount": { ".validate": "newData.isNumber() && newData.val() > 0" },
+        "date": { ".validate": "newData.isString() && newData.val().matches(/^[0-9]{4}-[0-9]{2}-[0-9]{2}$/)" },
+        "month": { ".validate": "newData.isString() && newData.val().matches(/^[0-9]{4}-[0-9]{2}$/) && newData.parent().child('date').val().beginsWith(newData.val())" },
+        "walletId": { ".validate": "newData.isString()" },
+        "toWalletId": { ".validate": "newData.isString() && newData.parent().child('type').val() === 'transfer'" },
+        "categoryId": { ".validate": "newData.isString()" },
+        "note": { ".validate": "newData.isString() && newData.val().length <= 200" },
+        "source": { ".validate": "newData.val() === 'app' || newData.val() === 'bot' || newData.val() === 'recurring'" }
+      }
+    },
+    "wallets": {
+      "$id": {
+        ".validate": "newData.hasChildren(['name', 'type', 'balance', 'initialBalance'])",
+        "balance": { ".validate": "newData.isNumber()" },
+        "initialBalance": { ".validate": "newData.isNumber()" }
+      }
+    },
+    "categories": {
+      "$id": {
+        ".validate": "newData.hasChildren(['type', 'icon', 'color'])",
+        "type": { ".validate": "newData.val() === 'expense' || newData.val() === 'income'" }
+      }
+    },
+    "recurring": {
+      "$id": {
+        "dayOfMonth": { ".validate": "newData.isNumber() && newData.val() >= 1 && newData.val() <= 31" },
+        "amount": { ".validate": "newData.isNumber() && newData.val() > 0" }
+      }
+    },
+    "settings": {
+      "language": { ".validate": "newData.val() === 'id' || newData.val() === 'en'" }
+    }
+  }
+}
